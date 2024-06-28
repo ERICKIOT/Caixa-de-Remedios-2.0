@@ -16,6 +16,7 @@
 #include <ESP32Servo.h>
 #include <WiFiManager.h>
 #include <pitches.h> 
+//#include <pitches.h> 
 
 const char* ssid     = "HUAWEI P30 Pro";
 const char* password = "erickegado";
@@ -38,8 +39,6 @@ Servo servo3;
 
 void setup()
 {
-    ledcSetup(CANAL_PWM, 1000, 8); // Configuração do canal PWM (frequência de 1000 Hz, resolução de 8 bits)
-    ledcAttachPin(PINO_BUZZER, CANAL_PWM); // Associa o pino do buzzer ao canal PWM   
     Serial.begin(115200);
     pinMode(pinoD2, OUTPUT);      // set the LED pin mode
     pinMode(pinoD5, OUTPUT);      // set the LED pin mode
@@ -139,63 +138,13 @@ void loop(){
             client.println("Content-type:text/html");
             client.println();
 
-/*
-            client.println("<center>");
-            client.println("<br>");
-            client.println("<a href=\"/bot1\"\"><button>Open 1</button></a>");
-            client.println("<br>");
-
-            client.println("<center>");
-            client.println("<br>");
-            client.println("<a href=\"/bot2\"\"><button>Open 2</button></a>");
-            client.println("<br>");
-
-            client.println("<center>");
-            client.println("<br>");
-            client.println("<a href=\"/bot3\"\"><button>Open 3</button></a>");
-            client.println("<br>");
-
-             client.println("<center>");
-            client.println("<br>");
-            client.println("<a href=\"/close1\"\"><button>Close 1</button></a>");
-            client.println("<br>");
-
-            client.println("<center>");
-            client.println("<br>");
-            client.println("<a href=\"/close2\"\"><button>Close 2</button></a>");
-            client.println("<br>");
-
-            client.println("<center>");
-            client.println("<br>");
-            client.println("<a href=\"/close3\"\"><button>Close 3</button></a>");
-            client.println("<br>");
-
-            //leds
-            client.println("<br>");
-            client.println("<center>");
-            client.println("<br>");
-            client.println("<a href=\"/ledH\"\"><button>Liga LED</button></a>");
-            client.println("<br>");
-
-            client.println("<center>");
-            client.println("<br>");
-            client.println("<a href=\"/ledL\"\"><button>Desliga LED</button></a>");
-            client.println("<br>");
-
-            //buzzer
-            client.println("<br>");
-            client.println("<center>");
-            client.println("<br>");
-            client.println("<a href=\"/buzzerH\"\"><button>Buzina</button></a>");
-            client.println("<br>");*/
-
             client.println(resposta);
             resposta = 0;
-            
             // The HTTP response ends with another blank line:
             client.println();
             // break out of the while loop:
             break;
+
           } else {    // if you got a newline, then clear currentLine:
             currentLine = "";
           }
@@ -221,16 +170,19 @@ void loop(){
         
         if (currentLine.endsWith("GET /close1")) {
           servo1.write(fechado);
+          desligaLeds();
           resposta = 1;
                           // GET /L turns the LED off
         }
         if (currentLine.endsWith("GET /close2")) {
           servo2.write(fechado);
+          desligaLeds();
           resposta = 1;
                           // GET /L turns the LED off
         }
         if (currentLine.endsWith("GET /close3")) {
           servo3.write(fechado);
+          desligaLeds();
           resposta = 1;
                           // GET /L turns the LED off
         }
@@ -247,22 +199,7 @@ void loop(){
         }
 
         if (currentLine.endsWith("GET /ledH")){
-          digitalWrite(PINO_RELE1, HIGH);
-          resposta = 1;
-        }
-
-        if (currentLine.endsWith("GET /ledL")){
-          digitalWrite(PINO_RELE1, LOW);
-          resposta = 1;
-        }
-
-        if (currentLine.endsWith("GET /ledH1")){
-          digitalWrite(PINO_RELE2, HIGH);
-          resposta = 1;
-        }
-
-        if (currentLine.endsWith("GET /ledL1")){
-          digitalWrite(PINO_RELE2, LOW);
+          ligaLeds();
           resposta = 1;
         }
       }
@@ -275,5 +212,19 @@ void loop(){
     // close the connection:
     client.stop();
     Serial.println("Client Disconnected.");
+  }
+}
+
+void ligaLeds(){
+  if(digitalRead(PINO_RELE1) == LOW){
+    digitalWrite(PINO_RELE1, HIGH);
+    digitalWrite(PINO_RELE2, HIGH);
+  }       
+}
+
+void desligaLeds(){
+  if(digitalRead(PINO_RELE1) == HIGH){
+    digitalWrite(PINO_RELE1, LOW);
+    digitalWrite(PINO_RELE2, LOW);
   }
 }
