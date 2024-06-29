@@ -15,7 +15,6 @@
 #include <WiFi.h>
 #include <ESP32Servo.h>
 #include <WiFiManager.h>
-#include <pitches.h> 
 //#include <pitches.h> 
 
 const char* ssid     = "HUAWEI P30 Pro";
