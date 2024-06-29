@@ -17,7 +17,7 @@
 #include <WiFi.h>
 #include <ESP32Servo.h>
 #include <WiFiManager.h>
-//#include <pitches.h> 
+#include <pitches.h.ino>
 
 const char* ssid     = "HUAWEI P30 Pro";
 const char* password = "erickegado";
@@ -51,8 +51,6 @@ void setup()
     pinMode(PINO_BUZZER, OUTPUT);
 
     pinMode(PINO_RELE1, OUTPUT);
-    
-
     digitalWrite(PINO_RELE1, HIGH);
     pinMode(PINO_RELE2, OUTPUT);
     digitalWrite(PINO_RELE2, HIGH);
@@ -187,14 +185,14 @@ void loop(){
         }
 
         if (currentLine.endsWith("GET /buzzerH")) {
-          digitalWrite(PINO_BUZZER, HIGH); // Ligar o buzzer
+          /*digitalWrite(PINO_BUZZER, HIGH); // Ligar o buzzer
           delay(1000); // Deixa o buzzer ligado por 1 segundo
           digitalWrite(PINO_BUZZER, LOW); // Desligar o buzzer
           delay(1000);
-          resposta = 1;
-        
+          resposta = 1;*/
+          tocaAlarme();
         }
-
+        
         if (currentLine.endsWith("GET /ledH")){
           ligaLeds();
           resposta = 1;
@@ -223,5 +221,38 @@ void desligaLeds(){
   if(digitalRead(PINO_RELE1) == LOW){
     digitalWrite(PINO_RELE1, HIGH);
     digitalWrite(PINO_RELE2, HIGH);
+  }
+}
+
+void tocaAlarme(){
+  int melody[] = {
+    NOTE_E5, NOTE_D5, NOTE_FS4, NOTE_GS4, 
+    NOTE_CS5, NOTE_B4, NOTE_D4, NOTE_E4, 
+    NOTE_B4, NOTE_A4, NOTE_CS4, NOTE_E4,
+    NOTE_A4
+  };
+
+  int durations[] = {
+    8, 8, 4, 4,
+    8, 8, 4, 4,
+    8, 8, 4, 4,
+    2
+  };
+
+  int size = sizeof(durations) / sizeof(int);
+
+  for (int note = 0; note < size; note++) {
+    //to calculate the note duration, take one second divided by the note type.
+    //e.g. quarter note = 1000 / 4, eighth note = 1000/8, etc.
+    int duration = 1000 / durations[note];
+    tone(PINO_BUZZER, melody[note], duration);
+
+    //to distinguish the notes, set a minimum time between them.
+    //the note's duration + 30% seems to work well:
+    int pauseBetweenNotes = duration * 1.30;
+    delay(pauseBetweenNotes);
+    
+    //stop the tone playing:
+    noTone(PINO_BUZZER);
   }
 }
