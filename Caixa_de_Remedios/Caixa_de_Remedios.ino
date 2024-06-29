@@ -1,9 +1,11 @@
 #define pinoD2 2
 #define pinoD5 5
 #define pinoD18 18
-#define SERVO_PIN 26
-#define SERVO_PIN3 27
-#define SERVO_PIN2 14
+
+
+#define SERVO_PIN3 26
+#define SERVO_PIN2 27
+#define SERVO_PIN 14
 
 #define PINO_BUZZER 32
 
@@ -51,10 +53,11 @@ void setup()
     pinMode(PINO_RELE1, OUTPUT);
     
 
+    digitalWrite(PINO_RELE1, HIGH);
     pinMode(PINO_RELE2, OUTPUT);
+    digitalWrite(PINO_RELE2, HIGH);
+
     
-
-
     servo1.attach(SERVO_PIN);
     servo2.attach(SERVO_PIN2);
     servo3.attach(SERVO_PIN3);
@@ -66,9 +69,6 @@ void setup()
     delay(10);
 
     conecta_wifi();
-
-    
-
 }
 
 void conecta_wifi(){
@@ -187,14 +187,12 @@ void loop(){
         }
 
         if (currentLine.endsWith("GET /buzzerH")) {
-          /*
           digitalWrite(PINO_BUZZER, HIGH); // Ligar o buzzer
           delay(1000); // Deixa o buzzer ligado por 1 segundo
           digitalWrite(PINO_BUZZER, LOW); // Desligar o buzzer
           delay(1000);
           resposta = 1;
-          */
-
+        
         }
 
         if (currentLine.endsWith("GET /ledH")){
@@ -215,15 +213,15 @@ void loop(){
 }
 
 void ligaLeds(){
-  if(digitalRead(PINO_RELE1) == LOW){
-    digitalWrite(PINO_RELE1, HIGH);
-    digitalWrite(PINO_RELE2, HIGH);
+  if(digitalRead(PINO_RELE1) == HIGH){
+    digitalWrite(PINO_RELE1, LOW);
+    digitalWrite(PINO_RELE2, LOW);
   }       
 }
 
 void desligaLeds(){
-  if(digitalRead(PINO_RELE1) == HIGH){
-    digitalWrite(PINO_RELE1, LOW);
-    digitalWrite(PINO_RELE2, LOW);
+  if(digitalRead(PINO_RELE1) == LOW){
+    digitalWrite(PINO_RELE1, HIGH);
+    digitalWrite(PINO_RELE2, HIGH);
   }
 }
