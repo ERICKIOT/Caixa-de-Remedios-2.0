@@ -19,8 +19,8 @@
 #include <WiFiManager.h>
 #include <pitches.h.ino>
 
-const char* ssid     = "HUAWEI P30 Pro";
-const char* password = "erickegado";
+const char* ssid     = "PRINT808";
+const char* password = "PRiNt3RbLO8";
 
 int aberto = 0;
 int fechado = 100;
@@ -185,12 +185,8 @@ void loop(){
         }
 
         if (currentLine.endsWith("GET /buzzerH")) {
-          /*digitalWrite(PINO_BUZZER, HIGH); // Ligar o buzzer
-          delay(1000); // Deixa o buzzer ligado por 1 segundo
-          digitalWrite(PINO_BUZZER, LOW); // Desligar o buzzer
-          delay(1000);
-          resposta = 1;*/
           tocaAlarme();
+          resposta = 1;
         }
         
         if (currentLine.endsWith("GET /ledH")){
